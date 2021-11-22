@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  mariadb:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: open3a-root
+      MYSQL_DATABASE: open3a
+      MYSQL_USER: open3a
+      MYSQL_PASSWORD: open3a
+    volumes:
+      - ./data/db:/var/lib/mysql
+  open3a:
+    build: ./open3a
+    environment:
+      DBHOST: mariadb
+      DBUSER: open3a
+      DBPASS: open3a
+      DBNAME: open3a
+    ports:
+      - 80:80
+    depends_on:
+      - mariadb
+    restart: always
+    volumes:      
+      - ./data/session:/var/www/html/system/session
+      - ./data/backup:/var/www/html/system/Backup
+      - ./data/specifics:/var/www/html/specifics
+

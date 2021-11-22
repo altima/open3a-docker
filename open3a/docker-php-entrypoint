@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+
+# first arg is `-f` or `--some-option`
+if [ "${1#-}" != "$1" ]; then
+	set -- apache2-foreground "$@"
+fi
+
+cat <<EOF >/var/www/html/system/DBData/Installation.pfdb.php
+<?php echo "This is a database-file."; /*
+host&%%%&user&%%%&password&%%%&datab&%%%&httpHost
+varchar(30)&%%%&varchar(20)&%%%&varchar(20)&%%%&varchar(20)&%%%&varchar(40)
+$DBHOST &%%%&$DBUSER &%%%&$DBPASS &%%%&$DBNAME &%%%&* %%&&&
+*/ ?>
+
+EOF
+
+chmod 0666 /var/www/html/system/DBData/Installation.pfdb.php
+
+exec "$@"
